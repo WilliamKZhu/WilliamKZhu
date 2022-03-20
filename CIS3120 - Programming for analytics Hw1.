@@ -1,0 +1,54 @@
+The purpose of this assignment was to scrap the Baruch's Men & Women Volleyball and Swimming teams usin to compare the heights of the wim team and volleyball team.
+Players height are listed in imperial units and we were asked to convert to the metric system
+
+
+
+import requests
+from bs4 import BeautifulSoup
+SwimmingMen="https://athletics.baruch.cuny.edu/sports/mens-swimming-and-diving/roster"
+VolleyballMen="https://athletics.baruch.cuny.edu/sports/mens-volleyball/roster"
+SwimmingWoman="https://athletics.baruch.cuny.edu/sports/womens-swimming-and-diving/roster"
+VolleyballWoman="https://athletics.baruch.cuny.edu/sports/womens-volleyball/roster"
+
+def height (url):
+    page= requests.get(url , verify=True)
+    soup = BeautifulSoup(page.content,'html.parser')
+    height = soup.findAll('span', class_ = "sidearm-roster-player-height")
+    roster_height=[]
+    
+    for x in height:
+        roster_height.append(x.get_text())
+        #splitting standard imperial height into two categories. (ft)
+        ft= [(num.split("'")[0])for num in roster_height]
+         #splitting standard imperial height into two categories. (inches)
+        inch1= [(num.split("'")[1])for num in roster_height]
+        #replacing '"' characters
+        inch = [char.replace('"', " ")for char in inch1]
+        #creating a loop to convert imperial system into metric (cm)
+        for num in range (0, len(ft)):
+            ft[num]= float(ft[num])* 30.48
+            inch[num]= float(inch[num])*2.54
+    #adding ft converted into cm, and in converted into cm for a total height
+    rostercm=  [ft + inch for ft, inch in zip (ft,inch)]
+    average= sum(rostercm)/len(rostercm)
+    #returning the heights (cm) of players
+    return  rostercm,average
+    
+    height(SwimmingMen)                    
+    #average height of the mens swimming team is 180.229cm
+    
+    height(SwimmingWoman)
+    #average height of the womans swimming team is 163.905cm
+    
+    height(VolleyballMen)
+    #average height of the mens volleyball is 186.765
+    
+    height(VolleyballWoman)
+    #average height of the womans volleyball team is 167.096
+    
+    #average volleyballplayer height is 176.9305
+    #average swimmer height is 172.067
+    #on average, volleyball players are taller.
+    
+    
+    
