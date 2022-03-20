@@ -1,0 +1,108 @@
+#include <iostream>
+using namespace std;
+
+class Payment{
+private:
+    int dollars;
+
+    int cents;
+
+public:
+
+    Payment(): dollars(0), cents(0){ 
+        cout<< "This is the default constructor" <<endl;          //default constructor
+    };                      
+
+    Payment(int D, int C): dollars(D), cents(C){
+        cout<< "This is the parametrized constructor"<< endl;   //parametrized constructor
+    };           
+
+    ~Payment( ){
+        cout << "This is the destructor"<< endl;
+    };                     //destructor
+
+    Payment(const Payment &rhs){
+        dollars = rhs.dollars;
+        cents = rhs.cents;
+        cout<< "This is a copy constructor:"<<endl;
+    };     //copy constructor
+
+
+//the constructors and destructor should contain a message announcing their execution 
+//Accessor & Mutators
+
+    float getDollars() const 
+    {return dollars;};           //returns the dollar amount
+
+    float getCents()const
+    {return cents;};
+                                 //returns the cent amount
+ 
+    void setDollars(int D){
+        int Dollars= D;
+    };          //sets the dollar amount of Payment
+    
+    void setCents(int C){       // limiting cents to <100
+        if (C > 100){
+            dollars +=1;
+            cents = 100 - C; 
+        }
+    };           //Sets the Cent amount of payment
+        
+    //Overloaded operators
+
+    Payment &operator=(const Payment & rhs){
+        if (this != & rhs){
+            dollars= rhs.dollars;
+            cents = rhs.cents;
+        }
+
+        return *this;       // returns dollars and cents
+    }
+
+    //adds dollars separate from cents
+    Payment operator+(const Payment & rhs){     
+        Payment a;
+        a.dollars = dollars +rhs.dollars;
+        a.cents = cents + rhs.cents;
+        return a;
+    };
+
+    friend ostream &operator<<(ostream &os, const Payment & rhs){
+        os << rhs.dollars << "." << rhs.cents<< endl;
+        return os;
+    } //outputs Payment
+};
+
+
+int main(){
+//Heading
+string Name("");
+cout << "Name" << endl;
+cin >> Name;
+/**********************************************************/
+cout << "-----------------------------------------" << endl;
+cout << Name << endl;
+cout << "FILE: " << __FILE__ << " Date: " __DATE__ << endl;
+cout << "-----------------------------------------" << endl;
+ /**********************************************************/
+ 
+    //Create a Payment X(1003, 33)
+    Payment X (1003,33);    
+    // creating array Z of 4 payment amounts
+    Payment Z[4] = {Payment(25,5) , Payment(50,10) , Payment(75,25) , Payment(100,50) };
+    
+    // printing Z array using << overloaded operators.
+    for (int i = 0; i < 4 ; i++){
+        cout << "Original payments amounts: "<< Z[i] << endl; 
+    }
+
+    Z[3] = X;  // reassigning payment 3 to 1003.33
+
+    Z[4] =Z[1]+ Z[2];
+
+    // printing updated Z array using << overloaded operators
+    for (int i = 0; i < 4 ; i++){
+        cout << "Adjusted payments amounts: $"<< Z[i] << endl; }
+    
+}
